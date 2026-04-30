@@ -1,16 +1,9 @@
-FROM php:8.2-cli
+ FROM php:8.2-apache
 
-WORKDIR /var/www
+RUN docker-php-ext-install pdo pdo_mysql
 
-RUN apt-get update && apt-get install -y \
-    git unzip curl libzip-dev zip \
-    && docker-php-ext-install zip
+COPY . /var/www/html
 
-COPY . .
+RUN chown -R www-data:www-data /var/www/html
 
-RUN curl -sS https://getcomposer.org/installer | php
-RUN php composer.phar install
-
-EXPOSE 10000
-
-CMD php artisan serve --host=0.0.0.0 --port=10000
+EXPOSE 80
